@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <string.h>
+#include "ListItem.h"
 enum enumType{
     CPU, IO, DUM
 };
@@ -21,7 +22,7 @@ public:
     ~tupleEntry();
 };
 
-class Process {
+class Process: public ListItem {
 private:
     int processNo;
     tupleEntry* listhead;
@@ -35,4 +36,5 @@ public:
     void listheadForward();
     void setarrivetime(int time);
     int getarrivetime();
+    int compareTo(ListItem* order);
 };

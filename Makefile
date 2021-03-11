@@ -12,7 +12,7 @@ A2main.o: A2main.cpp Simulation.cpp
 Simulation.o: Simulation.cpp Event.cpp Process.cpp Queue.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-Process.o: Process.cpp
+Process.o: Process.cpp ListItem.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 Queue.o: Queue.cpp Node.cpp 

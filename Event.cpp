@@ -30,16 +30,19 @@ Process* Event::getProcess() {
 
 //arrive事件，可以驱动startCPU事件
 void ArriveEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
-	hint += "Process {} has arrived, ";
+	hint += "Process ";
+	Process* p = this->getProcess();
+	hint += to_string(p->getProcessNo());
+	hint += " has arrived, ";
 	if(CPUQueue->isEmpty()) {
-		CPUQueue->enqueue((ListItem*)this->getProcess());
 		hint += "CPU is now free.\n";
 	} else {
 		hint += "CPU occupied.\n";
 	}
+	CPUQueue->enqueue((ListItem*)this->getProcess());
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(1);
 }
 
 //startCPU事件，可以驱动timeout事件和completeCPU事件
@@ -48,14 +51,17 @@ void StartCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 		hint += "No process pending for CPU\n";
 	} else {
 		Process* p = this->getProcess();
+		int cost = p->getlisthead()->getCost();
 		p->getlisthead()->resCost();
-		hint += "Process {} on CPU, ";
-		hint += to_string(p->getlisthead()->getCost());
-		hint += " remaining.\n";
+		hint += "Process ";
+		hint += to_string(p->getProcessNo());
+		hint += " on CPU, ";
+		hint += to_string(cost);
+		hint += " timeslice(s) remaining.\n";
 	}
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(1);
 }
 
 //startIO事件，可以驱动completeIO事件
@@ -65,16 +71,17 @@ void StartIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	} else {
 		Process* p = this->getProcess();
 		p->getlisthead()->resCost();
-		hint += "Process {} on IO device, ";
+		hint += "Process ";
+		hint += to_string(p->getProcessNo());
+		hint += " on IO, ";
 		hint += to_string(p->getlisthead()->getCost());
-		hint += " remaining.\n";
+		hint += " timeslice(s) remaining.\n";
 	}
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(1);
 }
 
-//completeCPU事件，可以驱动startIO事件或exit事件
 void CompleteCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()->getCost() == 0) {
@@ -82,34 +89,32 @@ void CompleteCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 		hint += to_string(theProcess->getProcessNo());
 		hint += " now exiting.\n";
 		theProcess->listheadForward();
-		return;
+		CPUQueue->dequeue();
 	}
 	IOQueue->enqueue((ListItem*)theProcess);
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(1);
 }
 
-//timeout事件
 void TimeoutEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()->getType() == CPU) {
 		hint += "Process ";
 		hint += to_string(theProcess->getProcessNo());
-		hint += "has run out its allocated time quantum and will be suspended.";
+		hint += " has run out its allocated time quantum and will be suspended.\n";
 		CPUQueue->dequeue();
 		CPUQueue->enqueue((ListItem*)theProcess);
 	} 
 	else if(theProcess->getlisthead()->getType() == IO) {
-		perror("There shouldn`t be any timeout during an IO process.\n");
+		cout << "There shouldn`t be any timeout during an IO process.\n";
 		return;
 	}
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(1);
 }
 
-//completeio事件，可以驱动startCPU事件或exit事件
 void CompleteIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()->getCost() == 0) {
@@ -117,15 +122,14 @@ void CompleteIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 		hint += to_string(theProcess->getProcessNo());
 		hint += " now releasing IO device for use.\n";
 		theProcess->listheadForward();
-		return;
+		IOQueue->dequeue();
 	}
 	CPUQueue->enqueue((ListItem*)theProcess);
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(1);
 }
 
-//exit事件
 void ExitEvent::handleEvent(Queue* queue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()) {
@@ -138,7 +142,7 @@ void ExitEvent::handleEvent(Queue* queue) {
 	queue->dequeue();
 	cout << hint;
 	hint.clear();
-	sleep(5);
+	sleep(2);
 }
 
 void ExitEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {

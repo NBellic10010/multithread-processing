@@ -1,4 +1,7 @@
 #include "Process.h"
+#include <iostream>
+
+using namespace std;
 
 tupleEntry::tupleEntry(enumType type, int cost) {
     this->type = type;
@@ -22,6 +25,7 @@ enumType tupleEntry::getType() { return this->type; }
 tupleEntry::~tupleEntry() { delete this; }
 
 Process::Process(int processno, std::string line) : processNo(processno) {
+    cout << "Process construct function." << endl; //checkpoint
     this->listhead = new tupleEntry(DUM, 0);
     setlist(line);
 }
@@ -31,22 +35,21 @@ int Process::getProcessNo() { return this->processNo; }
 tupleEntry* Process::getlisthead() { return this->listhead; }
 
 void Process::setlist(std::string line) {
-    //wait for implement
     char* cstr = (char*)line.c_str();
     const char* delim = " ";
     char* p;
     p = strtok(cstr, delim);
-    this->setarrivetime(atoi(p));
-    p = strtok(NULL, delim);
+    tupleEntry* pEntry = this->getlisthead();
     while(p) {
         int t = atoi(p);
-        tupleEntry* pEntry = this->getlisthead();
         if(t > 0) {
             pEntry->setNext(new tupleEntry(CPU, t));
         } else {
             pEntry->setNext(new tupleEntry(IO, -t));
         }
+        pEntry = pEntry->getNext();
         this->listtail = pEntry;
+        p = strtok(NULL, delim);
     }
 
     tupleEntry* dum = this->listhead;
@@ -64,4 +67,8 @@ void Process::setarrivetime(int time) {
 
 int Process::getarrivetime() {
     return this->arrivetime;
+}
+
+int Process::compareTo(ListItem* order) {
+    return 0;
 }

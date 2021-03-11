@@ -19,6 +19,7 @@ private:
 	Queue* CPU;
 	Queue* IODevice;
 	int CPU_burst = 4;
+	int timeslice = 0;
 public:
 	Simulation();
 
