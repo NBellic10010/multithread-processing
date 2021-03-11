@@ -29,9 +29,8 @@ Process* Event::getProcess() {
 }
 
 //arrive事件，可以驱动startCPU事件
-void ArriveEvent::handleEvent() {
+void ArriveEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	hint += "Process {} has arrived, ";
-	Queue* CPUQueue = this->sim->getCPUQueue();
 	if(CPUQueue->isEmpty()) {
 		CPUQueue->enqueue((ListItem*)this->getProcess());
 		hint += "CPU is now free.\n";
@@ -44,8 +43,7 @@ void ArriveEvent::handleEvent() {
 }
 
 //startCPU事件，可以驱动timeout事件和completeCPU事件
-void StartCPUEvent::handleEvent() {
-	Queue* CPUQueue = this->sim->getCPUQueue();
+void StartCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	if(CPUQueue->isEmpty()) {
 		hint += "No process pending for CPU\n";
 	} else {
@@ -61,8 +59,7 @@ void StartCPUEvent::handleEvent() {
 }
 
 //startIO事件，可以驱动completeIO事件
-void StartIOEvent::handleEvent() {
-	Queue* IOQueue = this->sim->getIOQueue();
+void StartIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	if(IOQueue->isEmpty()) {
 		hint += "No process pending for IO\n";
 	} else {
@@ -78,7 +75,7 @@ void StartIOEvent::handleEvent() {
 }
 
 //completeCPU事件，可以驱动startIO事件或exit事件
-void CompleteCPUEvent::handleEvent() {
+void CompleteCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()->getCost() == 0) {
 		hint += "CPU progress done, process ";
@@ -87,7 +84,6 @@ void CompleteCPUEvent::handleEvent() {
 		theProcess->listheadForward();
 		return;
 	}
-	Queue* IOQueue = this->sim->getIOQueue();
 	IOQueue->enqueue((ListItem*)theProcess);
 	cout << hint;
 	hint.clear();
@@ -95,13 +91,12 @@ void CompleteCPUEvent::handleEvent() {
 }
 
 //timeout事件
-void TimeoutEvent::handleEvent() {
+void TimeoutEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()->getType() == CPU) {
 		hint += "Process ";
 		hint += to_string(theProcess->getProcessNo());
 		hint += "has run out its allocated time quantum and will be suspended.";
-		Queue* CPUQueue = this->sim->getCPUQueue();
 		CPUQueue->dequeue();
 		CPUQueue->enqueue((ListItem*)theProcess);
 	} 
@@ -115,7 +110,7 @@ void TimeoutEvent::handleEvent() {
 }
 
 //completeio事件，可以驱动startCPU事件或exit事件
-void CompleteIOEvent::handleEvent() {
+void CompleteIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()->getCost() == 0) {
 		hint += "IO progress done, process ";
@@ -124,7 +119,6 @@ void CompleteIOEvent::handleEvent() {
 		theProcess->listheadForward();
 		return;
 	}
-	Queue* CPUQueue = this->sim->getCPUQueue();
 	CPUQueue->enqueue((ListItem*)theProcess);
 	cout << hint;
 	hint.clear();
@@ -145,4 +139,8 @@ void ExitEvent::handleEvent(Queue* queue) {
 	cout << hint;
 	hint.clear();
 	sleep(5);
+}
+
+void ExitEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
+	
 }

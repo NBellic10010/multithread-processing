@@ -1,7 +1,5 @@
 #pragma once
-
-class Node;
-class ListItem;
+#include "Node.h"
 
 class Queue {
 private:

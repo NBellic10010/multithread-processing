@@ -1,5 +1,4 @@
 #include "Process.h"
-#include <string.h>
 
 tupleEntry::tupleEntry(enumType type, int cost) {
     this->type = type;
@@ -17,6 +16,8 @@ void tupleEntry::setNext(tupleEntry* next) {
 void tupleEntry::resCost() { this->cost--; }
 
 int tupleEntry::getCost() { return this->cost; }
+
+enumType tupleEntry::getType() { return this->type; }
 
 tupleEntry::~tupleEntry() { delete this; }
 

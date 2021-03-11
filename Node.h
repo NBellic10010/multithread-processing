@@ -1,5 +1,5 @@
- 
-class ListItem;
+#pragma once
+#include "ListItem.h"
 
 class Node {
 private:

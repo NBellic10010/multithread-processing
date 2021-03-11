@@ -1,18 +1,15 @@
 #pragma once
 
 #include <fstream>
-#include "Queue.h"
 #include <fstream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h> 
 #include <string.h>
-#include "Process.h"
 #include <iostream>
 #include "Event.h"
 
 using namespace std;
-
 
 class Simulation {
 private:

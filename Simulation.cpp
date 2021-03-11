@@ -11,7 +11,7 @@ Simulation::Simulation() {
 void Simulation::runSimulation(char* filename) {
     ifstream file_data;
     int fd_summary = open("summary.md", O_RDWR | O_TRUNC);
-    file_data.open("A2-official-data.txt");
+    file_data.open(filename);
 
     char buf[1024];
     char time[10];
@@ -20,8 +20,9 @@ void Simulation::runSimulation(char* filename) {
         return;
     }
 
-    file_data.getline(buf, 1);
+    file_data.getline(buf, 10);
     int nextArrival = atoi(buf);
+    cout << "Next Arrival: " << nextArrival << endl; //Checkpoint 
     memset(buf, 0, 1024);
 
     int timeslice = nextArrival, processNum = 0;
@@ -38,7 +39,7 @@ void Simulation::runSimulation(char* filename) {
             memset(buf, 0, 1024);
             Process* newProcess = new Process(processNum++, line);
             ArriveEvent* event = new ArriveEvent(timeslice, newProcess, this);
-            event->handleEvent();
+            event->handleEvent(this->CPU, this->IODevice);
 
             file_data >> time;
             nextArrival = atoi(time);
@@ -54,14 +55,14 @@ void Simulation::runSimulation(char* filename) {
             }
             else if(currentCPUProcess->getlisthead()->getCost() == 0) {
                 CompleteCPUEvent* completeEvent = new CompleteCPUEvent(timeslice, currentCPUProcess, this);
-                completeEvent->handleEvent();
+                completeEvent->handleEvent(this->CPU, this->IODevice);
             }
             else {
                 StartCPUEvent* startCPUEvent = new StartCPUEvent(timeslice, currentCPUProcess, this);
-                startCPUEvent->handleEvent();
+                startCPUEvent->handleEvent(this->CPU, this->IODevice);
                 if(i == this->getCPUburst()) {
                     TimeoutEvent* timeoutEvent = new TimeoutEvent(timeslice, currentCPUProcess, this);
-                    timeoutEvent->handleEvent();
+                    timeoutEvent->handleEvent(this->CPU, this->IODevice);
                 }
             }
         }
@@ -73,11 +74,11 @@ void Simulation::runSimulation(char* filename) {
             }
             else if(currentIOProcess->getlisthead()->getCost() == 0) {
                 CompleteIOEvent* completeEvent = new CompleteIOEvent(timeslice, currentIOProcess, this);
-                completeEvent->handleEvent();
+                completeEvent->handleEvent(this->CPU, this->IODevice);
             }
             else {
                 StartIOEvent* startIOEvent = new StartIOEvent(timeslice, currentIOProcess, this);
-                startIOEvent->handleEvent();
+                startIOEvent->handleEvent(this->CPU, this->IODevice);
             }
         }
 
@@ -88,3 +89,8 @@ void Simulation::runSimulation(char* filename) {
 void Simulation::summary() {
 
 }
+
+int Simulation::getCPUburst() { return this->CPU_burst; }
+
+Queue* Simulation::getCPUQueue() { return this->CPU; }
+Queue* Simulation::getIOQueue() { return this->IODevice; }

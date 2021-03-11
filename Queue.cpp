@@ -1,6 +1,4 @@
 #include "Queue.h"
-#include "ListItem.h"
-#include "Node.h"
 
 /**** Queue implementation */
 Queue::Queue() : front(nullptr), back(nullptr), size(0) {}

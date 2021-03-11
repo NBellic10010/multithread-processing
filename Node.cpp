@@ -1,5 +1,4 @@
 #include "Node.h"
-#include "ListItem.h"
 
 /**** Node implementation */
 Node::Node() : item(nullptr), next(nullptr)  {}

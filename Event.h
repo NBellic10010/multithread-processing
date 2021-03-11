@@ -3,53 +3,9 @@
 #include "Process.h"
 #include <string>
 #include "Queue.h"
-#include "Simulation.h"
 
 class Process;
 class Simulation;
-
-class ArriveEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent();
-};
-
-class StartCPUEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent();
-};
-
-class CompleteCPUEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent();
-};
-
-class TimeoutEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent();
-};
-
-class StartIOEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent();
-};
-
-class CompleteIOEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent();
-};
-
-class ExitEvent: public Event {
-public:
-	using Event::Event;
-	void handleEvent(Queue* queue);
-	void handleEvent();
-};
 
 class Event: public ListItem {
 private:
@@ -62,7 +18,7 @@ public:
 	Event(int theTime, Process *theProcess, Simulation* sim); 
 
 	// pure virtual method - to handle the current event when it is removed from the queue.
-	virtual void handleEvent() = 0;
+	virtual void handleEvent(Queue* CPUQueue, Queue* IOQueue) = 0;
 
 	// compareTo - used to order Events. 
 	int compareTo(ListItem *other);
@@ -71,4 +27,48 @@ public:
 	int geteventTime();
 	void setProcess(Process* theProcess);
 };// class Event
+
+
+class ArriveEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+};
+
+class StartCPUEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+};
+
+class CompleteCPUEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+};
+
+class TimeoutEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+};
+
+class StartIOEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+};
+
+class CompleteIOEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+};
+
+class ExitEvent: public Event {
+public:
+	using Event::Event;
+	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
+	void handleEvent(Queue* queue);
+};
 
