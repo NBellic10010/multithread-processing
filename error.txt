@@ -1,0 +1,38 @@
+g++    -c -o A2main.o A2main.cpp
+g++ -c -o Event.o Event.cpp --std=c++11
+g++ -c -o Simulation.o Simulation.cpp --std=c++11
+g++ -c -o Process.o Process.cpp --std=c++11
+g++ -c -o Queue.o Queue.cpp --std=c++11
+g++ -c -o Node.o Node.cpp --std=c++11
+g++ -c -o ListItem.o ListItem.cpp --std=c++11
+g++ --std=c++11 -o A2 < Event.o Simulation.o Process.o Queue.o Node.o ListItem.o
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x24): undefined reference to `main'
+/usr/bin/ld: Simulation.o: in function `Simulation::runSimulation(char*)':
+Simulation.cpp:(.text+0x484): undefined reference to `tupleEntry::getType()'
+/usr/bin/ld: Simulation.cpp:(.text+0x4dd): undefined reference to `ExitEvent::handleEvent(Queue*)'
+/usr/bin/ld: Simulation.cpp:(.text+0x6ba): undefined reference to `tupleEntry::getType()'
+/usr/bin/ld: Simulation.cpp:(.text+0x713): undefined reference to `ExitEvent::handleEvent(Queue*)'
+/usr/bin/ld: Simulation.o: in function `ArriveEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN11ArriveEventCI25EventEiP7ProcessP10Simulation[_ZN11ArriveEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN11ArriveEventCI25EventEiP7ProcessP10Simulation[_ZN11ArriveEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for ArriveEvent'
+/usr/bin/ld: Simulation.o: in function `ExitEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN9ExitEventCI25EventEiP7ProcessP10Simulation[_ZN9ExitEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN9ExitEventCI25EventEiP7ProcessP10Simulation[_ZN9ExitEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for ExitEvent'
+/usr/bin/ld: Simulation.o: in function `CompleteCPUEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN16CompleteCPUEventCI25EventEiP7ProcessP10Simulation[_ZN16CompleteCPUEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN16CompleteCPUEventCI25EventEiP7ProcessP10Simulation[_ZN16CompleteCPUEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for CompleteCPUEvent'
+/usr/bin/ld: Simulation.o: in function `StartCPUEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN13StartCPUEventCI25EventEiP7ProcessP10Simulation[_ZN13StartCPUEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN13StartCPUEventCI25EventEiP7ProcessP10Simulation[_ZN13StartCPUEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for StartCPUEvent'
+/usr/bin/ld: Simulation.o: in function `TimeoutEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN12TimeoutEventCI25EventEiP7ProcessP10Simulation[_ZN12TimeoutEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN12TimeoutEventCI25EventEiP7ProcessP10Simulation[_ZN12TimeoutEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for TimeoutEvent'
+/usr/bin/ld: Simulation.o: in function `CompleteIOEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN15CompleteIOEventCI25EventEiP7ProcessP10Simulation[_ZN15CompleteIOEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN15CompleteIOEventCI25EventEiP7ProcessP10Simulation[_ZN15CompleteIOEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for CompleteIOEvent'
+/usr/bin/ld: Simulation.o: in function `StartIOEvent::Event(int, Process*, Simulation*)':
+Simulation.cpp:(.text._ZN12StartIOEventCI25EventEiP7ProcessP10Simulation[_ZN12StartIOEventCI55EventEiP7ProcessP10Simulation]+0x2e): undefined reference to `Event::Event(int, Process*, Simulation*)'
+/usr/bin/ld: Simulation.cpp:(.text._ZN12StartIOEventCI25EventEiP7ProcessP10Simulation[_ZN12StartIOEventCI55EventEiP7ProcessP10Simulation]+0x35): undefined reference to `vtable for StartIOEvent'
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:7: all] Error 1
