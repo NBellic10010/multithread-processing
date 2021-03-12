@@ -34,6 +34,7 @@ public:
 
 	// you may need to add more methods
 	int getCPUburst();
+	int gettimeSlice();
 	Queue* getEventQueue();
 	Queue* getCPUQueue();
 	Queue* getIOQueue();

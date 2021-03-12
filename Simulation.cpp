@@ -122,3 +122,5 @@ int Simulation::getCPUburst() { return this->CPU_burst; }
 Queue* Simulation::getCPUQueue() { return this->CPU; }
 Queue* Simulation::getIOQueue() { return this->IODevice; }
 Queue* Simulation::getdoneQueue() { return this->doneProcessQueue; }
+
+int Simulation::gettimeSlice() { return this->timeslice; }
