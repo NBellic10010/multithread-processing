@@ -32,7 +32,7 @@ void Simulation::runSimulation(char* filename) {
 
     for( ; ;this->timeslice++) {
         if(this->timeslice == nextArrival) {
-            cout << "New process arrived: " << timeslice << endl; //Checkpoint
+            cout << "New process arrived: " << this->timeslice << endl; //Checkpoint
             if(file_data.eof()) return;
 
             file_data.getline(buf, 1024);
@@ -40,6 +40,7 @@ void Simulation::runSimulation(char* filename) {
             string line(buf, buf + strlen(buf));
             memset(buf, 0, 1024);
             Process* newProcess = new Process(processNum++, line);
+            newProcess->setarrivetime(this->timeslice);
             ArriveEvent* event = new ArriveEvent(timeslice, newProcess, this);
             event->handleEvent(this->CPU, this->IODevice);
 
@@ -55,7 +56,7 @@ void Simulation::runSimulation(char* filename) {
                 ExitEvent* exitEvent = new ExitEvent(timeslice, currentCPUProcess, this);
                 exitEvent->handleEvent(this->CPU, this->timeslice);
                 this->doneProcessQueue->enqueue((ListItem*)currentCPUProcess);
-                cout << "Exit time " << this->timeslice << endl;
+                cout << currentCPUProcess->getProcessNo() << " now enqueue from CPUQueue, at time " << this->timeslice << endl;
             }
             else if(currentCPUProcess->getlisthead()->getCost() == 0) {
                 CompleteCPUEvent* completeEvent = new CompleteCPUEvent(timeslice, currentCPUProcess, this);
@@ -85,7 +86,7 @@ void Simulation::runSimulation(char* filename) {
                 ExitEvent* exitEvent = new ExitEvent(timeslice, currentIOProcess, this);
                 exitEvent->handleEvent(this->IODevice, this->timeslice);
                 this->doneProcessQueue->enqueue((ListItem*)currentIOProcess);
-                cout << "Exit time " << this->timeslice << endl;
+                cout << currentIOProcess->getProcessNo() << " now enqueue from IOQueue, at time " << this->timeslice << endl;
             }
             else if(currentIOProcess->getlisthead()->getCost() == 0) {
                 CompleteIOEvent* completeEvent = new CompleteIOEvent(timeslice, currentIOProcess, this);
@@ -104,7 +105,7 @@ void Simulation::runSimulation(char* filename) {
 void Simulation::summary() {
     Queue* queue = this->getdoneQueue();
     cout << "************** SUMMARY ***************" << endl;
-    for(int i = 0; i < queue->getSize(); i++) {
+    while(!queue->isEmpty()) {
         ListItem* processItem = queue->dequeue();
         Process* currentProcess = dynamic_cast<Process*>(processItem);
 
@@ -112,7 +113,7 @@ void Simulation::summary() {
         cout << "Process arrival time: " << currentProcess->getarrivetime() << endl;
         cout << "on CPU: " << currentProcess->getCPUtime() << endl;
         cout << "on IO device: " << currentProcess->getIOtime() << endl;
-        cout << "Exit at" << currentProcess->getexittime() << endl;
+        cout << "Exit at " << currentProcess->getexittime() << endl;
     }
     cout << "************** SUMMARY COMPLETE ***************" << endl;
 }
