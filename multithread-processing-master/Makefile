@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = --std=c++11
 
-objects = Simulation.o Process.o Queue.o Node.o ListItem.o Event.o 
+objects = Simulation.o Process.o Queue.o Node.o ListItem.o Event.o tupleEntry.o
 
 all: A2main.o $(objects)
 	$(CC) $(CFLAGS) -o A2 $< $(objects)
@@ -12,13 +12,16 @@ A2main.o: A2main.cpp Simulation.cpp
 Simulation.o: Simulation.cpp Event.cpp Process.cpp Queue.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-Process.o: Process.cpp ListItem.cpp
+Process.o: Process.cpp ListItem.cpp tupleEntry.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 Queue.o: Queue.cpp Node.cpp 
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 ListItem.o: ListItem.cpp
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+tupleEntry.o: tupleEntry.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 Node.o: Node.cpp ListItem.cpp

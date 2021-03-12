@@ -53,15 +53,8 @@ void StartCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 		Process* p = this->getProcess();
 		int cost = p->getlisthead()->getCost();
 		p->getlisthead()->resCost();
-		hint += "Process ";
-		hint += to_string(p->getProcessNo());
-		hint += " on CPU, ";
-		hint += to_string(cost);
-		hint += " timeslice(s) remaining.\n";
 		this->getProcess()->addCPUtime();
 	}
-	cout << hint;
-	hint.clear();
 	//sleep(1);
 }
 
@@ -72,15 +65,8 @@ void StartIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	} else {
 		Process* p = this->getProcess();
 		p->getlisthead()->resCost();
-		hint += "Process ";
-		hint += to_string(p->getProcessNo());
-		hint += " on IO, ";
-		hint += to_string(p->getlisthead()->getCost());
-		hint += " timeslice(s) remaining.\n";
 		this->getProcess()->addIOtime();
 	}
-	cout << hint;
-	hint.clear();
 	//sleep(1);
 }
 

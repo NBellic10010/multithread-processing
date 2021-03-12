@@ -3,27 +3,6 @@
 
 using namespace std;
 
-tupleEntry::tupleEntry(enumType type, int cost) {
-    this->type = type;
-    this->cost = cost;
-}
-
-tupleEntry* tupleEntry::getNext() {
-    return this->next;
-}
-
-void tupleEntry::setNext(tupleEntry* next) {
-    this->next = next;
-}
-
-void tupleEntry::resCost() { this->cost--; }
-
-int tupleEntry::getCost() { return this->cost; }
-
-enumType tupleEntry::getType() { return this->type; }
-
-tupleEntry::~tupleEntry() { delete this; }
-
 Process::Process(int processno, std::string line) : processNo(processno) {
     cout << "Process construct function." << endl; //checkpoint
     this->listhead = new tupleEntry(DUM, 0);
@@ -44,8 +23,11 @@ void Process::setlist(std::string line) {
         int t = atoi(p);
         if(t > 0) {
             pEntry->setNext(new tupleEntry(CPU, t));
-        } else {
+        } else if (t < 0) {
             pEntry->setNext(new tupleEntry(IO, -t));
+        } else {
+            perror("Value 0 does not mean to exist.");
+            exit(1);
         }
         pEntry = pEntry->getNext();
         this->listtail = pEntry;
