@@ -10,7 +10,6 @@ int test(char* filename) {
 }
 
 TEST_CASE("Simulation test cases") {
-	
 	REQUIRE(test("test_1.txt") == 100);
 	REQUIRE(test("test_2.txt") == 379);
 	REQUIRE(test("test_3.txt") == 237);
