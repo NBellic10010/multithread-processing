@@ -23,11 +23,12 @@ void Simulation::runSimulation(char* filename) {
     }
 
     file_data.getline(buf, 10);
-    int nextArrival = atoi(buf);
+    this->CPU_burst = atoi(buf);
     memset(buf, 0, 1024);
-
-    int timeslice = nextArrival, processNum = 1;
     file_data.read(buf, 2);
+    int nextArrival = atoi(buf);
+    int timeslice = nextArrival, processNum = 1;
+    
 
     for( ; ;this->timeslice++) {
         if(this->timeslice == nextArrival) {
@@ -54,6 +55,7 @@ void Simulation::runSimulation(char* filename) {
                 ExitEvent* exitEvent = new ExitEvent(timeslice, currentCPUProcess, this);
                 exitEvent->handleEvent(this->CPU, this->timeslice);
                 this->doneProcessQueue->enqueue((ListItem*)currentCPUProcess);
+                cout << "Exit time " << this->timeslice << endl;
             }
             else if(currentCPUProcess->getlisthead()->getCost() == 0) {
                 CompleteCPUEvent* completeEvent = new CompleteCPUEvent(timeslice, currentCPUProcess, this);
@@ -83,6 +85,7 @@ void Simulation::runSimulation(char* filename) {
                 ExitEvent* exitEvent = new ExitEvent(timeslice, currentIOProcess, this);
                 exitEvent->handleEvent(this->IODevice, this->timeslice);
                 this->doneProcessQueue->enqueue((ListItem*)currentIOProcess);
+                cout << "Exit time " << this->timeslice << endl;
             }
             else if(currentIOProcess->getlisthead()->getCost() == 0) {
                 CompleteIOEvent* completeEvent = new CompleteIOEvent(timeslice, currentIOProcess, this);

@@ -83,7 +83,10 @@ int Process::addIOtime() {
     return this->onIO_Time;
 }
 
-int Process::setexittime(int time) { this->exit_Time = time; }
+int Process::setexittime(int time) { 
+    this->exit_Time = time; 
+    return this->exit_Time;
+}
 
 int Process::getCPUtime() {
    return this->onCPU_Time;

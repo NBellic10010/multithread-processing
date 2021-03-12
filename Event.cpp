@@ -42,7 +42,7 @@ void ArriveEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	CPUQueue->enqueue((ListItem*)this->getProcess());
 	cout << hint;
 	hint.clear();
-	sleep(1);
+	//sleep(1);
 }
 
 //startCPU事件，可以驱动timeout事件和completeCPU事件
@@ -62,7 +62,7 @@ void StartCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	}
 	cout << hint;
 	hint.clear();
-	sleep(1);
+	//sleep(1);
 }
 
 //startIO事件，可以驱动completeIO事件
@@ -81,7 +81,7 @@ void StartIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	}
 	cout << hint;
 	hint.clear();
-	sleep(1);
+	//sleep(1);
 }
 
 void CompleteCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
@@ -96,7 +96,7 @@ void CompleteCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	IOQueue->enqueue((ListItem*)theProcess);
 	cout << hint;
 	hint.clear();
-	sleep(1);
+	//sleep(1);
 }
 
 void TimeoutEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
@@ -114,7 +114,7 @@ void TimeoutEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	}
 	cout << hint;
 	hint.clear();
-	sleep(1);
+	//sleep(1);
 }
 
 void CompleteIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
@@ -129,23 +129,23 @@ void CompleteIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	CPUQueue->enqueue((ListItem*)theProcess);
 	cout << hint;
 	hint.clear();
-	sleep(1);
+	//sleep(1);
 }
 
 void ExitEvent::handleEvent(Queue* queue, int time) {
 	Process* theProcess = this->getProcess();
-	if(theProcess->getlisthead()) {
-		perror("Not finished yet!");
+	if(theProcess->getlisthead()->getType() != DUM) {
+		printf("Not finished yet!\n");
 		return;
 	}
 	hint += "Process ";
 	hint += to_string(theProcess->getProcessNo());
-	hint += "now exiting.\n";
+	hint += " now exiting.\n";
 	queue->dequeue();
 	cout << hint;
 	hint.clear();
 	this->getProcess()->setexittime(time);
-	sleep(2);
+	//sleep(2);
 }
 
 void ExitEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
