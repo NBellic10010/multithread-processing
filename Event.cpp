@@ -58,6 +58,7 @@ void StartCPUEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 		hint += " on CPU, ";
 		hint += to_string(cost);
 		hint += " timeslice(s) remaining.\n";
+		this->getProcess()->addCPUtime();
 	}
 	cout << hint;
 	hint.clear();
@@ -76,6 +77,7 @@ void StartIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 		hint += " on IO, ";
 		hint += to_string(p->getlisthead()->getCost());
 		hint += " timeslice(s) remaining.\n";
+		this->getProcess()->addIOtime();
 	}
 	cout << hint;
 	hint.clear();
@@ -130,7 +132,7 @@ void CompleteIOEvent::handleEvent(Queue* CPUQueue, Queue* IOQueue) {
 	sleep(1);
 }
 
-void ExitEvent::handleEvent(Queue* queue) {
+void ExitEvent::handleEvent(Queue* queue, int time) {
 	Process* theProcess = this->getProcess();
 	if(theProcess->getlisthead()) {
 		perror("Not finished yet!");
@@ -142,6 +144,7 @@ void ExitEvent::handleEvent(Queue* queue) {
 	queue->dequeue();
 	cout << hint;
 	hint.clear();
+	this->getProcess()->setexittime(time);
 	sleep(2);
 }
 

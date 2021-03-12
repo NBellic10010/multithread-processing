@@ -72,3 +72,27 @@ int Process::getarrivetime() {
 int Process::compareTo(ListItem* order) {
     return 0;
 }
+
+int Process::addCPUtime() {
+    this->onCPU_Time++;
+    return this->onCPU_Time;
+}
+
+int Process::addIOtime() {
+    this->onIO_Time++;
+    return this->onIO_Time;
+}
+
+int Process::setexittime(int time) { this->exit_Time = time; }
+
+int Process::getCPUtime() {
+   return this->onCPU_Time;
+}
+
+int Process::getIOtime() {
+    return this->onIO_Time;
+}
+
+int Process::getexittime() {
+    return this->exit_Time;
+}

@@ -6,6 +6,7 @@ Simulation::Simulation() {
     this->eventQueue = new Queue();
     this->CPU = new Queue();
     this->IODevice = new Queue();
+    this->doneProcessQueue = new Queue();
 }
 
 void Simulation::runSimulation(char* filename) {
@@ -51,7 +52,8 @@ void Simulation::runSimulation(char* filename) {
             //cout << currentCPUProcess->getlisthead()->getType() << endl; //checkpoint
             if(currentCPUProcess->getlisthead()->getType() == DUM) {
                 ExitEvent* exitEvent = new ExitEvent(timeslice, currentCPUProcess, this);
-                exitEvent->handleEvent(this->CPU);
+                exitEvent->handleEvent(this->CPU, this->timeslice);
+                this->doneProcessQueue->enqueue((ListItem*)currentCPUProcess);
             }
             else if(currentCPUProcess->getlisthead()->getCost() == 0) {
                 CompleteCPUEvent* completeEvent = new CompleteCPUEvent(timeslice, currentCPUProcess, this);
@@ -79,7 +81,8 @@ void Simulation::runSimulation(char* filename) {
             Process* currentIOProcess = dynamic_cast<Process*>(curIO);
             if(currentIOProcess->getlisthead()->getType() == DUM) {
                 ExitEvent* exitEvent = new ExitEvent(timeslice, currentIOProcess, this);
-                exitEvent->handleEvent(this->IODevice);
+                exitEvent->handleEvent(this->IODevice, this->timeslice);
+                this->doneProcessQueue->enqueue((ListItem*)currentIOProcess);
             }
             else if(currentIOProcess->getlisthead()->getCost() == 0) {
                 CompleteIOEvent* completeEvent = new CompleteIOEvent(timeslice, currentIOProcess, this);
@@ -96,10 +99,23 @@ void Simulation::runSimulation(char* filename) {
 }
 
 void Simulation::summary() {
+    Queue* queue = this->getdoneQueue();
+    cout << "************** SUMMARY ***************" << endl;
+    for(int i = 0; i < queue->getSize(); i++) {
+        ListItem* processItem = queue->dequeue();
+        Process* currentProcess = dynamic_cast<Process*>(processItem);
 
+        cout << "-----------Process " << currentProcess->getProcessNo() << "-----------" << endl;
+        cout << "Process arrival time: " << currentProcess->getarrivetime() << endl;
+        cout << "on CPU: " << currentProcess->getCPUtime() << endl;
+        cout << "on IO device: " << currentProcess->getIOtime() << endl;
+        cout << "Exit at" << currentProcess->getexittime() << endl;
+    }
+    cout << "************** SUMMARY COMPLETE ***************" << endl;
 }
 
 int Simulation::getCPUburst() { return this->CPU_burst; }
 
 Queue* Simulation::getCPUQueue() { return this->CPU; }
 Queue* Simulation::getIOQueue() { return this->IODevice; }
+Queue* Simulation::getdoneQueue() { return this->doneProcessQueue; }

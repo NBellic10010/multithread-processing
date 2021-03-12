@@ -69,6 +69,6 @@ class ExitEvent: public Event {
 public:
 	using Event::Event;
 	void handleEvent(Queue* CPUQueue, Queue* IOQueue);
-	void handleEvent(Queue* queue);
+	void handleEvent(Queue* queue, int time);
 };
 

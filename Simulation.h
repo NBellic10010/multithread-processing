@@ -18,6 +18,7 @@ private:
 	Queue* eventQueue;
 	Queue* CPU;
 	Queue* IODevice;
+	Queue* doneProcessQueue;
 	int CPU_burst = 4;
 	int timeslice = 0;
 public:
@@ -36,5 +37,6 @@ public:
 	Queue* getEventQueue();
 	Queue* getCPUQueue();
 	Queue* getIOQueue();
+	Queue* getdoneQueue();
 
 };// class Simulation
